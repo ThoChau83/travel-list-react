@@ -5,11 +5,15 @@ export default function App() {
   function handleItem(newItem) {
     setItems((currItem) => [...currItem, newItem]);
   }
+  function handleDelete(id) {
+    setItems((currItem) => currItem.filter((item) => item.id !== id));
+  }
+
   return (
     <div className="app">
       <Logo></Logo>
       <Form onHandle={handleItem}></Form>
-      <PackingList items={items}></PackingList>
+      <PackingList items={items} onHandleDelete={handleDelete}></PackingList>
       <Stats></Stats>
     </div>
   );
@@ -20,7 +24,7 @@ function Logo() {
 }
 function Form({ onHandle }) {
   const [description, setDescription] = useState("");
-  const [quantity, setQuantity] = useState(0);
+  const [quantity, setQuantity] = useState(1);
 
   function handleSubmit(e) {
     e.preventDefault();
@@ -60,12 +64,12 @@ function Form({ onHandle }) {
     </form>
   );
 }
-function PackingList({ items }) {
+function PackingList({ items, onHandleDelete }) {
   return (
     <div className="list">
       <ul>
         {items.map((item) => (
-          <Item item={item} key={item.id} />
+          <Item item={item} key={item.id} ocD={onHandleDelete} />
         ))}
       </ul>
     </div>
@@ -78,7 +82,7 @@ function Item(props) {
       <span style={props.item.packed ? { textDecoration: "line-through" } : {}}>
         {props.item.quantity} {props.item.description}
       </span>
-      <button>❌</button>
+      <button onClick={() => props.ocD(props.item.id)}>❌</button>
     </li>
   );
 }
