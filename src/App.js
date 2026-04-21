@@ -1,15 +1,15 @@
 import { useState } from "react";
-const initialItems = [
-  { id: 1, description: "Passports", quantity: 2, packed: false },
-  { id: 2, description: "Socks", quantity: 12, packed: true },
-];
 
 export default function App() {
+  const [items, setItems] = useState([]);
+  function handleItem(newItem) {
+    setItems((currItem) => [...currItem, newItem]);
+  }
   return (
     <div className="app">
       <Logo></Logo>
-      <Form></Form>
-      <PackingList></PackingList>
+      <Form onHandle={handleItem}></Form>
+      <PackingList items={items}></PackingList>
       <Stats></Stats>
     </div>
   );
@@ -18,12 +18,17 @@ export default function App() {
 function Logo() {
   return <h1>Far Travel</h1>;
 }
-function Form() {
+function Form({ onHandle }) {
   const [description, setDescription] = useState("");
   const [quantity, setQuantity] = useState(0);
 
   function handleSubmit(e) {
     e.preventDefault();
+    const newItem = { description, quantity, packed: false, id: Date.now() };
+
+    onHandle(newItem);
+    setDescription("");
+    setQuantity(1);
   }
   return (
     <form className="add-form" onSubmit={handleSubmit}>
@@ -55,12 +60,12 @@ function Form() {
     </form>
   );
 }
-function PackingList() {
+function PackingList({ items }) {
   return (
     <div className="list">
       <ul>
-        {initialItems.map((item) => (
-          <Item item={item} />
+        {items.map((item) => (
+          <Item item={item} key={item.id} />
         ))}
       </ul>
     </div>
