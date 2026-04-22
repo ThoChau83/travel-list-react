@@ -76,10 +76,17 @@ function PackingList({ items, onHandleDelete }) {
   );
 }
 function Item(props) {
+  const [check, setCheck] = useState(false);
+
   return (
     <li>
       {" "}
-      <span style={props.item.packed ? { textDecoration: "line-through" } : {}}>
+      <input
+        type="checkbox"
+        checked={check}
+        onChange={(e) => setCheck(e.target.checked)}
+      ></input>
+      <span style={check ? { textDecoration: "line-through" } : {}}>
         {props.item.quantity} {props.item.description}
       </span>
       <button onClick={() => props.ocD(props.item.id)}>❌</button>
